@@ -39,17 +39,18 @@ const Index = () => {
   const [currentProjectName, setCurrentProjectName] = useState<string>('');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedCurve, setSelectedCurve] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Load last project from localStorage
   useEffect(() => {
     const lastProjectId = localStorage.getItem('iot-dashboard-last-project');
     const savedProjects = localStorage.getItem('iot-dashboard-projects');
-    
+
     if (lastProjectId && savedProjects) {
       const projects = JSON.parse(savedProjects);
       const lastProject = projects.find((p: any) => p.id === lastProjectId);
-      
+
       if (lastProject) {
         setCsvUrl(lastProject.csvUrl);
         setCurrentProjectName(lastProject.name);
@@ -61,39 +62,36 @@ const Index = () => {
   const fetchData = async (url: string) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const csvText = await response.text();
-      
+
       Papa.parse(csvText, {
         header: true,
         skipEmptyLines: true,
         transform: (value: string, field: string) => {
-          // Convert numeric fields
           if (field?.toLowerCase().includes('indicateur')) {
             const num = parseFloat(value);
             return isNaN(num) ? 0 : num;
           }
-          
-          // Convert boolean fields
+
           if (field?.toLowerCase().includes('bulb') || field?.toLowerCase().includes('ecran')) {
             if (value.toLowerCase() === 'true') return true;
             if (value.toLowerCase() === 'false') return false;
             return value;
           }
-          
+
           return value;
         },
         complete: (results) => {
           if (results.errors.length > 0) {
             console.warn('Parse warnings:', results.errors);
           }
-          
+
           const processedData = results.data.map((row: any) => ({
             timestamp: row.Timestamp || row.timestamp || '',
             email: row.Email || row.email || '',
@@ -111,11 +109,11 @@ const Index = () => {
             indicateur2: parseFloat(row.Indicateur2 || row.indicateur2 || '0'),
             indicateur3: parseFloat(row.Indicateur3 || row.indicateur3 || '0'),
             indicateur4: parseFloat(row.Indicateur4 || row.indicateur4 || '0'),
-          })).filter(row => row.timestamp); // Filter out empty rows
-          
+          })).filter(row => row.timestamp);
+
           setData(processedData);
           setLastUpdated(new Date());
-          
+
           toast({
             title: "Data Updated",
             description: `Loaded ${processedData.length} records`,
@@ -153,19 +151,19 @@ const Index = () => {
   // Filter data by selected date
   const filteredData = useMemo(() => {
     if (!selectedDate || data.length === 0) return data;
-    
+
     const selectedDateStr = selectedDate.toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
     });
-    
+
     return data.filter(row => {
       if (!row.timestamp) return false;
       const rowDate = parseTimestamp(row.timestamp);
       const rowDateStr = rowDate.toLocaleDateString('fr-FR', {
         day: '2-digit',
-        month: '2-digit', 
+        month: '2-digit',
         year: 'numeric'
       });
       return rowDateStr === selectedDateStr;
@@ -211,7 +209,7 @@ const Index = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               {lastUpdated && (
                 <span className="text-xs text-muted-foreground">
@@ -238,7 +236,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Connection Panel */}
-        <ConnectionPanel 
+        <ConnectionPanel
           onConnect={handleConnect}
           isLoading={isLoading}
           error={error}
@@ -252,7 +250,7 @@ const Index = () => {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Filter by Date:</span>
               </div>
-              
+
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -281,7 +279,7 @@ const Index = () => {
                     onSelect={setSelectedDate}
                     disabled={(date) => {
                       if (availableDates.length === 0) return false;
-                      return !availableDates.some(availableDate => 
+                      return !availableDates.some(availableDate =>
                         availableDate.toDateString() === date.toDateString()
                       );
                     }}
@@ -290,7 +288,6 @@ const Index = () => {
                   />
                 </PopoverContent>
               </Popover>
-
               {selectedDate && (
                 <Button
                   variant="ghost"
@@ -303,7 +300,6 @@ const Index = () => {
                 </Button>
               )}
             </div>
-
             <div className="text-sm text-muted-foreground">
               {selectedDate ? (
                 filteredData.length > 0 ? (
@@ -325,10 +321,14 @@ const Index = () => {
               <>
                 {/* Status Cards */}
                 <StatusCards data={filteredData} />
-                
+
                 {/* Charts */}
-                <ChartSection data={filteredData} />
-                
+                <ChartSection
+                  data={filteredData}
+                  selectedCurve={selectedCurve}
+                  onSelectCurve={setSelectedCurve}
+                />
+
                 {/* Data Table */}
                 <DataTable data={filteredData} />
               </>
@@ -339,7 +339,7 @@ const Index = () => {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">No Data Available</h3>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  No data found for {selectedDate.toLocaleDateString('fr-FR')}. 
+                  No data found for {selectedDate.toLocaleDateString('fr-FR')}.
                   Try selecting a different date or clear the filter to see all data.
                 </p>
               </div>
@@ -355,7 +355,7 @@ const Index = () => {
             </div>
             <h3 className="text-lg font-semibold mb-2">No Data Connected</h3>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Connect to your Google Sheets to start monitoring your IoT devices. 
+              Connect to your Google Sheets to start monitoring your IoT devices.
               Make sure your sheet is shared publicly and follows the expected format.
             </p>
           </div>
