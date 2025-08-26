@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { TrendingUp, BarChart3 } from 'lucide-react';
@@ -27,6 +28,8 @@ interface ChartSectionProps {
 }
 
 export function ChartSection({ data }: ChartSectionProps) {
+  const [activeLine, setActiveLine] = useState<string | null>(null);
+
   if (data.length === 0) return null;
 
   // Format data for line chart
@@ -79,47 +82,67 @@ export function ChartSection({ data }: ChartSectionProps) {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis 
-                  dataKey="time" 
+                <XAxis
+                  dataKey="time"
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={12}
                 />
-                <YAxis 
+                <YAxis
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={12}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Line 
-                  type="monotone" 
-                  dataKey="indicateur1" 
-                  stroke="hsl(199, 89%, 48%)" 
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(199, 89%, 48%)", strokeWidth: 2 }}
+                <Line
+                  type="monotone"
+                  dataKey="indicateur1"
+                  stroke={activeLine === "indicateur1" ? "hsl(199, 89%, 48%)" : "rgba(59, 130, 246, 0.3)"}
+                  strokeWidth={activeLine === "indicateur1" ? 3 : 2}
+                  dot={{
+                    fill: "hsl(199, 89%, 48%)",
+                    strokeWidth: activeLine === "indicateur1" ? 4 : 2,
+                    r: activeLine === "indicateur1" ? 6 : 4,
+                  }}
                   name="Sensor 1"
+                  onClick={() => setActiveLine(activeLine === "indicateur1" ? null : "indicateur1")}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="indicateur2" 
-                  stroke="hsl(142, 76%, 36%)" 
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(142, 76%, 36%)", strokeWidth: 2 }}
+                <Line
+                  type="monotone"
+                  dataKey="indicateur2"
+                  stroke={activeLine === "indicateur2" ? "hsl(142, 76%, 36%)" : "rgba(16, 185, 129, 0.3)"}
+                  strokeWidth={activeLine === "indicateur2" ? 3 : 2}
+                  dot={{
+                    fill: "hsl(142, 76%, 36%)",
+                    strokeWidth: activeLine === "indicateur2" ? 4 : 2,
+                    r: activeLine === "indicateur2" ? 6 : 4,
+                  }}
                   name="Sensor 2"
+                  onClick={() => setActiveLine(activeLine === "indicateur2" ? null : "indicateur2")}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="indicateur3" 
-                  stroke="hsl(38, 92%, 50%)" 
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(38, 92%, 50%)", strokeWidth: 2 }}
+                <Line
+                  type="monotone"
+                  dataKey="indicateur3"
+                  stroke={activeLine === "indicateur3" ? "hsl(38, 92%, 50%)" : "rgba(251, 191, 36, 0.3)"}
+                  strokeWidth={activeLine === "indicateur3" ? 3 : 2}
+                  dot={{
+                    fill: "hsl(38, 92%, 50%)",
+                    strokeWidth: activeLine === "indicateur3" ? 4 : 2,
+                    r: activeLine === "indicateur3" ? 6 : 4,
+                  }}
                   name="Sensor 3"
+                  onClick={() => setActiveLine(activeLine === "indicateur3" ? null : "indicateur3")}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="indicateur4" 
-                  stroke="hsl(280, 89%, 58%)" 
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(280, 89%, 58%)", strokeWidth: 2 }}
+                <Line
+                  type="monotone"
+                  dataKey="indicateur4"
+                  stroke={activeLine === "indicateur4" ? "hsl(280, 89%, 58%)" : "rgba(168, 85, 247, 0.3)"}
+                  strokeWidth={activeLine === "indicateur4" ? 3 : 2}
+                  dot={{
+                    fill: "hsl(280, 89%, 58%)",
+                    strokeWidth: activeLine === "indicateur4" ? 4 : 2,
+                    r: activeLine === "indicateur4" ? 6 : 4,
+                  }}
                   name="Sensor 4"
+                  onClick={() => setActiveLine(activeLine === "indicateur4" ? null : "indicateur4")}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -140,19 +163,19 @@ export function ChartSection({ data }: ChartSectionProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis 
-                  dataKey="name" 
+                <XAxis
+                  dataKey="name"
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={12}
                 />
-                <YAxis 
+                <YAxis
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={12}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar 
-                  dataKey="value" 
-                  fill="url(#gradient)" 
+                <Bar
+                  dataKey="value"
+                  fill="url(#gradient)"
                   radius={[4, 4, 0, 0]}
                 />
                 <defs>
