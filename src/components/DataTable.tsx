@@ -79,7 +79,7 @@ export function DataTable({ data }: DataTableProps) {
       if (key.startsWith('bulb') || key.startsWith('ecran')) {
         return row[key as keyof IoTData] === value;
       } else if (key.startsWith('indicateur')) {
-        return row[key as keyof IoTData] === value;
+        return row[key as keyof IoTData] > value;
       }
       return true;
     });
@@ -154,7 +154,7 @@ export function DataTable({ data }: DataTableProps) {
             size="sm"
             onClick={() => toggleFilter('indicateur1', 10)}
           >
-            Indicateur 1 > 10
+            Indicateur 1 &gt; 10
           </Button>
           {isFilterActive && (
             <Button
