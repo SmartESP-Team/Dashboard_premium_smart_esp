@@ -92,54 +92,78 @@ export function ChartSection({ data }: ChartSectionProps) {
                   fontSize={12}
                 />
                 <Tooltip content={<CustomTooltip />} />
+                {/* Indicateur 1 */}
                 <Line
                   type="monotone"
                   dataKey="indicateur1"
-                  stroke={activeLine === "indicateur1" ? "hsl(199, 89%, 48%)" : "rgba(59, 130, 246, 0.3)"}
+                  stroke="hsl(199, 89%, 48%)"
                   strokeWidth={activeLine === "indicateur1" ? 3 : 2}
+                  strokeOpacity={activeLine === "indicateur1" ? 1 : 0.2}
                   dot={{
                     fill: "hsl(199, 89%, 48%)",
                     strokeWidth: activeLine === "indicateur1" ? 4 : 2,
                     r: activeLine === "indicateur1" ? 6 : 4,
+                    filter: activeLine === "indicateur1" ? "drop-shadow(0 0 4px hsl(199, 89%, 48%))" : "none",
+                  }}
+                  style={{
+                    filter: activeLine === "indicateur1" ? "drop-shadow(0 0 6px hsl(199, 89%, 48%))" : "none",
                   }}
                   name="Sensor 1"
                   onClick={() => setActiveLine(activeLine === "indicateur1" ? null : "indicateur1")}
                 />
+                {/* Indicateur 2 */}
                 <Line
                   type="monotone"
                   dataKey="indicateur2"
-                  stroke={activeLine === "indicateur2" ? "hsl(142, 76%, 36%)" : "rgba(16, 185, 129, 0.3)"}
+                  stroke="hsl(142, 76%, 36%)"
                   strokeWidth={activeLine === "indicateur2" ? 3 : 2}
+                  strokeOpacity={activeLine === "indicateur2" ? 1 : 0.2}
                   dot={{
                     fill: "hsl(142, 76%, 36%)",
                     strokeWidth: activeLine === "indicateur2" ? 4 : 2,
                     r: activeLine === "indicateur2" ? 6 : 4,
+                    filter: activeLine === "indicateur2" ? "drop-shadow(0 0 4px hsl(142, 76%, 36%))" : "none",
+                  }}
+                  style={{
+                    filter: activeLine === "indicateur2" ? "drop-shadow(0 0 6px hsl(142, 76%, 36%))" : "none",
                   }}
                   name="Sensor 2"
                   onClick={() => setActiveLine(activeLine === "indicateur2" ? null : "indicateur2")}
                 />
+                {/* Indicateur 3 */}
                 <Line
                   type="monotone"
                   dataKey="indicateur3"
-                  stroke={activeLine === "indicateur3" ? "hsl(38, 92%, 50%)" : "rgba(251, 191, 36, 0.3)"}
+                  stroke="hsl(38, 92%, 50%)"
                   strokeWidth={activeLine === "indicateur3" ? 3 : 2}
+                  strokeOpacity={activeLine === "indicateur3" ? 1 : 0.2}
                   dot={{
                     fill: "hsl(38, 92%, 50%)",
                     strokeWidth: activeLine === "indicateur3" ? 4 : 2,
                     r: activeLine === "indicateur3" ? 6 : 4,
+                    filter: activeLine === "indicateur3" ? "drop-shadow(0 0 4px hsl(38, 92%, 50%))" : "none",
+                  }}
+                  style={{
+                    filter: activeLine === "indicateur3" ? "drop-shadow(0 0 6px hsl(38, 92%, 50%))" : "none",
                   }}
                   name="Sensor 3"
                   onClick={() => setActiveLine(activeLine === "indicateur3" ? null : "indicateur3")}
                 />
+                {/* Indicateur 4 */}
                 <Line
                   type="monotone"
                   dataKey="indicateur4"
-                  stroke={activeLine === "indicateur4" ? "hsl(280, 89%, 58%)" : "rgba(168, 85, 247, 0.3)"}
+                  stroke="hsl(280, 89%, 58%)"
                   strokeWidth={activeLine === "indicateur4" ? 3 : 2}
+                  strokeOpacity={activeLine === "indicateur4" ? 1 : 0.2}
                   dot={{
                     fill: "hsl(280, 89%, 58%)",
                     strokeWidth: activeLine === "indicateur4" ? 4 : 2,
                     r: activeLine === "indicateur4" ? 6 : 4,
+                    filter: activeLine === "indicateur4" ? "drop-shadow(0 0 4px hsl(280, 89%, 58%))" : "none",
+                  }}
+                  style={{
+                    filter: activeLine === "indicateur4" ? "drop-shadow(0 0 6px hsl(280, 89%, 58%))" : "none",
                   }}
                   name="Sensor 4"
                   onClick={() => setActiveLine(activeLine === "indicateur4" ? null : "indicateur4")}
