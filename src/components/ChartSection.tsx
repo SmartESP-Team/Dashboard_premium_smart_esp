@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { TrendingUp, BarChart3 } from 'lucide-react';
 import { formatTime } from '@/lib/utils';
+import { Button } from '@/components/ui/button'; // Assure-toi d'importer ton composant Button
 
 interface IoTData {
   timestamp: string;
@@ -67,6 +68,14 @@ export function ChartSection({ data }: ChartSectionProps) {
     return null;
   };
 
+  // Liste des indicateurs pour les boutons
+  const indicators = [
+    { key: "indicateur1", label: "Sensor 1", color: "hsl(199, 89%, 48%)" },
+    { key: "indicateur2", label: "Sensor 2", color: "hsl(142, 76%, 36%)" },
+    { key: "indicateur3", label: "Sensor 3", color: "hsl(38, 92%, 50%)" },
+    { key: "indicateur4", label: "Sensor 4", color: "hsl(280, 89%, 58%)" },
+  ];
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Line Chart */}
@@ -78,6 +87,24 @@ export function ChartSection({ data }: ChartSectionProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {/* Boutons de sélection des lignes */}
+          <div className="flex gap-2 mb-4 flex-wrap">
+            {indicators.map((indicator) => (
+              <Button
+                key={indicator.key}
+                variant={activeLine === indicator.key ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveLine(activeLine === indicator.key ? null : indicator.key)}
+                style={{
+                  borderColor: indicator.color,
+                  color: activeLine === indicator.key ? "white" : indicator.color,
+                  backgroundColor: activeLine === indicator.key ? indicator.color : "transparent",
+                }}
+              >
+                {indicator.label}
+              </Button>
+            ))}
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
@@ -109,7 +136,6 @@ export function ChartSection({ data }: ChartSectionProps) {
                     filter: activeLine === "indicateur1" ? "drop-shadow(0 0 6px hsl(199, 89%, 48%))" : "none",
                   }}
                   name="Sensor 1"
-                  onClick={() => setActiveLine(activeLine === "indicateur1" ? null : "indicateur1")}
                 />
                 {/* Indicateur 2 */}
                 <Line
@@ -128,7 +154,6 @@ export function ChartSection({ data }: ChartSectionProps) {
                     filter: activeLine === "indicateur2" ? "drop-shadow(0 0 6px hsl(142, 76%, 36%))" : "none",
                   }}
                   name="Sensor 2"
-                  onClick={() => setActiveLine(activeLine === "indicateur2" ? null : "indicateur2")}
                 />
                 {/* Indicateur 3 */}
                 <Line
@@ -147,7 +172,6 @@ export function ChartSection({ data }: ChartSectionProps) {
                     filter: activeLine === "indicateur3" ? "drop-shadow(0 0 6px hsl(38, 92%, 50%))" : "none",
                   }}
                   name="Sensor 3"
-                  onClick={() => setActiveLine(activeLine === "indicateur3" ? null : "indicateur3")}
                 />
                 {/* Indicateur 4 */}
                 <Line
@@ -166,7 +190,6 @@ export function ChartSection({ data }: ChartSectionProps) {
                     filter: activeLine === "indicateur4" ? "drop-shadow(0 0 6px hsl(280, 89%, 58%))" : "none",
                   }}
                   name="Sensor 4"
-                  onClick={() => setActiveLine(activeLine === "indicateur4" ? null : "indicateur4")}
                 />
               </LineChart>
             </ResponsiveContainer>
